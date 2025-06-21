@@ -1,8 +1,11 @@
+from PIL import Image
 import streamlit as st
 
+favicon = Image.open('./favicon.png')
+
 st.set_page_config(
-    page_title="競プロアプリ",
-    page_icon="favicon-new.png",  # Make sure this file exists in the same folder
+    page_title="プログラミング記録",
+    page_icon=favicon,  # 画像をここで指定 ⚠️ここで注意⚠️ safariだとなぜかfaviconが反映されないので、chromeでリンクを開くこと。
     layout="wide"
 )
 
@@ -60,10 +63,10 @@ if 'login' not in st.session_state:
     st.session_state['login'] = False
 
 # UI
-st.title("競プロアプリへようこそ！")
+st.title("プログラミング練習記録")
 
 # サイドバーでページ選択
-st.sidebar.title("競プロアプリ")
+st.sidebar.title("記録アプリ")
 selected = st.sidebar.radio("ページを選んでください", [
     "アカウント登録",
     "ログイン",
