@@ -39,10 +39,10 @@ def render():
                 return sorted(task, key=lambda x: x["added_id"])
             elif method == "優先度順":
             # 優先度
-                return sorted(task, key=lambda x: x["priority"])
+                return sorted(task, key=lambda x: (priority_order[x["priority"]], x["due"], x["added_id"]))
             elif method == "日付順":
             # 締切日
-                return sorted(task, key=lambda x: x["due"])
+                return sorted(task, key=lambda x: (x["due"], priority_order[x["priority"]], x["added_id"]))
             else:
                 return task
         
