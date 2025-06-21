@@ -1,3 +1,32 @@
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Text
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker
+import datetime
+
+Base = declarative_base()
+
+class Word(Base):
+    __tablename__ = 'words'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    word = Column(String, unique=True)
+    meaning = Column(Text, default="")
+    sentence = Column(Text, default="")
+    last_sent = Column(DateTime, default=datetime.datetime.min)
+
+DATABASE_URL = "sqlite:///words.db"
+engine = create_engine(DATABASE_URL)
+Base.metadata.create_all(engine)
+SessionLocal = sessionmaker(bind=engine)
+
+def get_session():
+    return SessionLocal()
+
+if __name__ == "__main__":
+    session = get_session()
+    for i in range(10):
+        session.add(Word(word=f"test{i}", meaning=f"test{i}", sentence=f"test{i}"))
+    session.commit()
+    session.close()
 import pandas as pd
 import streamlit as st
 from datetime import date

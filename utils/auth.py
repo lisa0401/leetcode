@@ -1,17 +1,37 @@
-# ユーザテーブルにアクセス
-# 入力されたメールアドレスとパスワードを参照
-import pandas as pd
+import sqlite3
+import os
 
-def authenticate_user(mail, password):
-    # ユーザーテーブルを読み込み
-    user_table = pd.read_csv('db/user_table.csv')
+DB_PATH = os.path.join(os.path.dirname(__file__), "users.db")
 
-    # 条件を確認
-    matching_users = user_table[(user_table['Email'] == mail) & (user_table['Password'] == password)]
+def create_user_table():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            username TEXT PRIMARY KEY,
+            password TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
 
-    # ユーザーが見つからない場合の処理
-    if matching_users.empty:
-        return None  # またはエラーメッセージを返す
+def add_user(username, password):
+    print(f"登録試行: {username=}, {password=}")
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    try:
+        c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False
+    finally:
+        conn.close()
 
-    # ユーザー名を返す
-    return matching_users.iloc[0]['User']
+def verify_user(username, password):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
+    result = c.fetchone()
+    conn.close()
+    return result is not None
