@@ -28,7 +28,7 @@ def render():
 
         #タスクを表示・更新・削除
         for i, task in enumerate(st.session_state.tasks):
-            cols = st.columns([0.06, 0.4, 0.2, 0.15, 0.05, 0.05, 0.05]) #チェックボックス、タイトル、締め切り、優先度、完了、削除
+            cols = st.columns([0.05, 0.5, 0.15, 0.12, 0.08, 0.1]) #チェックボックス、タイトル、締め切り、優先度、完了、削除
 
             #チェックボックス
             with cols[0]:
