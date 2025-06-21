@@ -1,29 +1,38 @@
 import streamlit as st
 
+# セッション状態の初期化
 if 'login' not in st.session_state:
     st.session_state['login'] = False
-    
-# アプリの基本設定
-st.set_page_config(page_title="競プロアプリ", layout="wide")
 
-# ヘッダー
-st.sidebar.title("競プロアプ")
-st.sidebar.markdown("**ページを選択してください:**")
+# アプリ設定（重要：デフォルトナビゲーションUIは無効）
+st.set_page_config(
+    page_title="競プロアプリ",
+    layout="wide"
+)
 
-# ページの選択メニュー
-pages = {
-    "ログイン": "pages.login",
-    "やることリスト": "pages.reservation",
-    "チャットで相談": "pages.chat",
-    "実施した問題の記録": "pages.training_log",
-}
+# サイドバーでページ選択
+st.sidebar.title("競プロアプリ")
+selected = st.sidebar.radio("ページを選んでください", [
+    "アカウント登録",
+    "ログイン",
+    "やることリスト",
+    "チャットで相談",
+    "実施した問題の記録",
+])
 
-# 選択されたページをインポートして表示
-selected_page = st.sidebar.radio("ナビゲーション", list(pages.keys()))
-page_module = __import__(pages[selected_page], fromlist=[""])
-
-# 選択されたページの内容をレンダリング
-if hasattr(page_module, "render"):
-    page_module.render()
-else:
-    st.error("ページが見つかりませんでした。")
+# ページの表示ロジック（components フォルダにまとめる）
+if selected == "アカウント登録":
+    from components import register
+    register.render()
+elif selected == "ログイン":
+    from components import login
+    login.render()
+elif selected == "やることリスト":
+    from components import reservation
+    reservation.render()
+elif selected == "チャットで相談":
+    from components import chat
+    chat.render()
+elif selected == "実施した問題の記録":
+    from components import training_log
+    training_log.render()
