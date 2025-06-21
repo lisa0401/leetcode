@@ -1,21 +1,27 @@
 import streamlit as st
 
+st.set_page_config(
+    page_title="競プロアプリ",
+    page_icon="favicon-new.png",  # Make sure this file exists in the same folder
+    layout="wide"
+)
+
 # グローバルCSSの埋め込み
 st.markdown("""
     <style>
     .stApp {
-        background-color: #f8f9fa;
+        background-color: #FFF7F0;  /* Soft cream */
         font-family: 'Poppins', sans-serif;
-        color: #1c1c1c;
+        color: #2e2e2e;
         padding: 0 2rem;
     }
 
     h1, h2, .stMarkdown h1, .stMarkdown h2 {
-        color: #003366 !important;
+        color: #2e2e2e;  /* Dark pastel-compatible gray */
     }
 
     button[kind="primary"] {
-        background-color: #0074D9;
+        background-color: #A7C7E7;  /* Soft blue */
         color: white;
         border-radius: 10px;
         padding: 0.5rem 1rem;
@@ -24,45 +30,37 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] {
-        background-color: #0F172A;
-        color: white;
+        background-color: #F4A7B9;  /* Soft red-pink */
+        color: #2e2e2e;
     }
 
     [data-testid="stSidebar"] .stMarkdown a {
-        color: #38BDF8;
-    }
-
-    /* ログインページ中央揃え */
-    .login-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 80vh;
-        text-align: center;
+        color: #2e2e2e;
     }
 
     .login-container input, .login-container button {
         margin-top: 1rem;
         width: 300px;
+        border-radius: 6px;
+        border: 1px solid #DDD;
+        background-color: white;
+    }
+
+    /* Optional: hover effects */
+    button[kind="primary"]:hover {
+        background-color: #FFD8A9;  /* Soft orange on hover */
+        color: #2e2e2e;
     }
 
     </style>
 """, unsafe_allow_html=True)
 
-
-# ここから本格的にUIを組み始める
-st.title("競プロアプリへようこそ！")
-
 # セッション状態の初期化
 if 'login' not in st.session_state:
     st.session_state['login'] = False
 
-# アプリ設定（重要：デフォルトナビゲーションUIは無効）
-st.set_page_config(
-    page_title="競プロアプリ",
-    layout="wide"
-)
+# UI
+st.title("競プロアプリへようこそ！")
 
 # サイドバーでページ選択
 st.sidebar.title("競プロアプリ")
