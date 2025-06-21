@@ -1,0 +1,9 @@
+/* 全ての h1 を強制的に赤に */
+.stMarkdown h1 {
+    color: red !important;
+}
+
+/* タイトルっぽいもの全部に */
+h1, h2, .stMarkdown h1, .stMarkdown h2 {
+    color: red !important;
+}
