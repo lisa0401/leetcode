@@ -2,3 +2,5 @@ components/__pycache__
 utils/__pycache__
 utils/users.db
 .venv/
+.DS_Store
+.DS_Store
