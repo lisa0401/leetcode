@@ -31,8 +31,25 @@ st.markdown("""
     [data-testid="stSidebar"] .stMarkdown a {
         color: #38BDF8;
     }
+
+    /* ログインページ中央揃え */
+    .login-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 80vh;
+        text-align: center;
+    }
+
+    .login-container input, .login-container button {
+        margin-top: 1rem;
+        width: 300px;
+    }
+
     </style>
 """, unsafe_allow_html=True)
+
 
 # アプリの基本設定
 st.set_page_config(page_title="競プロアプリ", layout="wide")
