@@ -1,8 +1,8 @@
 import streamlit as st
-from utils import auth  # auth.py を utils フォルダに置いている場合
+from utils import auth
 
 def render():
-    auth.create_user_table()  # 初期化（初回のみ）
+    auth.create_user_table()
 
     st.title("ログインページ")
 
@@ -12,7 +12,6 @@ def render():
     if st.button("ログイン"):
         if auth.verify_user(username, password):
             st.success("ログイン成功！")
-            # ✅ ここでセッションにユーザー名を保存
             st.session_state['login'] = True
             st.session_state['username'] = username
             st.rerun()
@@ -30,3 +29,13 @@ def render():
             st.success("ユーザー登録に成功しました。上のフォームからログインしてください。")
         else:
             st.error("そのユーザー名はすでに使われています。")
+
+    st.write("---")
+    st.subheader("Geminiに質問してみよう（お試し）")
+
+    user_question = st.text_input("知りたいことを入力してください")
+    if st.button("送信"):
+        if user_question:
+            response = model.generate_content(user_question)
+            st.info("回答:")
+            st.write(response.text)
