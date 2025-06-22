@@ -32,7 +32,7 @@ def render():
 
     # ---------------------------------------------
     # 現在の連続記録の計算
-    current_streak = 0
+    current_streak = 1
     check_date = date.today()
 
     if check_date in recorded_dates_set:
@@ -48,7 +48,7 @@ def render():
 
     # ---------------------------------------------
     # 最長記録の計算
-    longest_streak = 0
+    longest_streak = 1
     if recorded_dates_set: # 記録がある場合のみ計算
         sorted_unique_dates = sorted(list(recorded_dates_set))
         temp_current_streak = 0
