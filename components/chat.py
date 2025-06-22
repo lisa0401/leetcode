@@ -13,7 +13,7 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 
 def to_markdown(text):
   text = text.replace('•', '  *')
-  return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
+  return st.markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 
 
 def render():

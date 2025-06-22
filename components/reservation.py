@@ -185,6 +185,20 @@ def render():
                     task["done"] = True
                     if task["id"]:
                         auth.update_task_done(task["id"], True)
+
+                    # ✅ training_log.py に表示するための記録形式に変換して追加
+                    if "records" not in st.session_state:
+                        st.session_state["records"] = []
+
+                    st.session_state["records"].append({
+                        "日付": date.today(),
+                        "実施した問題": task["title"],
+                        "難易度": task["difficulty"],  # "高", "中", "低"のまま
+                        "解けたor解けなかった": "解けた",  # タスク完了は「解けた」とみなす
+                        "反省点（感想）": "",  # タスクからは入力されていないので空
+                        "コードスニペット": ""  # 同上
+                    })
+
                     st.rerun()
 
         with cols[5]:

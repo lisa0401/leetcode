@@ -119,7 +119,7 @@ def add_task(username, title, due, difficulty):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
-        "INSERT INTO s (username, title, due, difficulty, done) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO logs (username, title, due, difficulty, done) VALUES (?, ?, ?, ?, ?)",
         (username, title, due, difficulty, 0)
     )
     conn.commit()
