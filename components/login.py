@@ -17,25 +17,3 @@ def render():
             st.rerun()
         else:
             st.error("ユーザー名またはパスワードが正しくありません")
-
-    st.write("---")
-    st.subheader("新規ユーザー登録")
-
-    new_user = st.text_input("新しいユーザー名", key="new_user")
-    new_pass = st.text_input("新しいパスワード", type="password", key="new_pass")
-
-    if st.button("登録"):
-        if auth.add_user(new_user, new_pass):
-            st.success("ユーザー登録に成功しました。上のフォームからログインしてください。")
-        else:
-            st.error("そのユーザー名はすでに使われています。")
-
-    st.write("---")
-    st.subheader("Geminiに質問してみよう（お試し）")
-
-    user_question = st.text_input("知りたいことを入力してください")
-    if st.button("送信"):
-        if user_question:
-            response = model.generate_content(user_question)
-            st.info("回答:")
-            st.write(response.text)
