@@ -1,30 +1,33 @@
-from PIL import Image
 import streamlit as st
+from PIL import Image
+import pathlib
 
-favicon = Image.open('./favicon.png')
+
+BASE_DIR = pathlib.Path(__file__).parent
+logo_path = BASE_DIR / "logo.png"
+logo_img = Image.open(logo_path)
 
 st.set_page_config(
-    page_title="プログラミング記録",
-    page_icon=favicon,  # 画像をここで指定 ⚠️ここで注意⚠️ safariだとなぜかfaviconが反映されないので、chromeでリンクを開くこと。
+    page_title="競プロアプリ",
+    page_icon=logo_img,
     layout="wide"
 )
 
-# グローバルCSSの埋め込み
 st.markdown("""
     <style>
     .stApp {
-        background-color: #FFF7F0;  /* Soft cream */
+        background-color: #FFF7F0;
         font-family: 'Poppins', sans-serif;
         color: #2e2e2e;
         padding: 0 2rem;
     }
 
     h1, h2, .stMarkdown h1, .stMarkdown h2 {
-        color: #2e2e2e;  /* Dark pastel-compatible gray */
+        color: #2e2e2e;
     }
 
     button[kind="primary"] {
-        background-color: #A7C7E7;  /* Soft blue */
+        background-color: #A7C7E7;
         color: white;
         border-radius: 10px;
         padding: 0.5rem 1rem;
@@ -33,7 +36,7 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] {
-        background-color: #F4A7B9;  /* Soft red-pink */
+        background-color: #F4A7B9;
         color: #2e2e2e;
     }
 
@@ -49,33 +52,48 @@ st.markdown("""
         background-color: white;
     }
 
-    /* Optional: hover effects */
     button[kind="primary"]:hover {
-        background-color: #FFD8A9;  /* Soft orange on hover */
+        background-color: #FFD8A9;
         color: #2e2e2e;
     }
 
+    /* サイドバーメニューの色設定（順番に適用） */
+    section[data-testid="stSidebar"] label:nth-of-type(1) div span {
+        color: #E74C3C !important; /* 赤 */
+    }
+    section[data-testid="stSidebar"] label:nth-of-type(2) div span {
+        color: #2ECC71 !important; /* 緑 */
+    }
+    section[data-testid="stSidebar"] label:nth-of-type(3) div span {
+        color: #F39C12 !important; /* オレンジ */
+    }
+    section[data-testid="stSidebar"] label:nth-of-type(4) div span {
+        color: #2ECC71 !important; /* 緑 */
+    }
+    section[data-testid="stSidebar"] label:nth-of-type(5) div span {
+        color: #E74C3C !important; /* 赤 */
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# セッション状態の初期化
+
 if 'login' not in st.session_state:
     st.session_state['login'] = False
 
-# UI
-st.title("プログラミング練習記録")
 
-# サイドバーでページ選択
-st.sidebar.title("記録アプリ")
+st.markdown('<h1 style="color:#2ECC71;">競プロアプリへようこそ！</h1>', unsafe_allow_html=True)
+
+
+st.sidebar.title("競プロアプリ")
 selected = st.sidebar.radio("ページを選んでください", [
     "アカウント登録",
     "ログイン",
     "やることリスト",
     "チャットで相談",
-    "実施した問題の記録",
+    "実施した問題の記録"
 ])
 
-# ページの表示ロジック（components フォルダにまとめる）
+
 if selected == "アカウント登録":
     from components import register
     register.render()
