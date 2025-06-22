@@ -15,45 +15,42 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- テーマの定義 ---
-# ここで複数のテーマを定義します。色コードを自由に変更・追加してください。
+# --- テーマの定義 (変更なし) ---
 THEMES = {
     "デフォルト (競プロアプリ)": {
-        "bg_color": "#FFF7F0",       # アプリ全体の背景 (Soft cream)
-        "text_color": "#2e2e2e",     # 全体的なテキスト色 (Dark pastel-compatible gray)
-        "h_color": "#2e2e2e",        # ヘッダー (h1, h2) のテキスト色
-        "primary_btn_bg": "#A7C7E7", # プライマリボタンの背景 (Soft blue)
-        "primary_btn_hover": "#FFD8A9", # プライマリボタンのホバー色 (Soft orange)
-        "sidebar_bg": "#F4A7B9",     # サイドバーの背景 (Soft red-pink)
-        "sidebar_text": "#2e2e2e",   # サイドバーのテキスト色
-        "sidebar_link": "#2e2e2e",   # サイドバーのリンク色
+        "bg_color": "#FFF7F0",
+        "text_color": "#2e2e2e",
+        "h_color": "#2e2e2e",
+        "primary_btn_bg": "#A7C7E7",
+        "primary_btn_hover": "#FFD8A9",
+        "sidebar_bg": "#F4A7B9",
+        "sidebar_text": "#2e2e2e",
+        "sidebar_link": "#2e2e2e",
     },
     "ダークモード": {
-        "bg_color": "#212121",       # 全体の背景 (Dark Gray)
-        "text_color": "#f0f2f6",     # 全体テキスト (Light Gray)
-        "h_color": "#ffffff",        # ヘッダーテキスト (White)
-        "primary_btn_bg": "#424242", # ボタン背景 (Gray)
-        "primary_btn_hover": "#616161", # ボタンホバー (Lighter Gray)
-        "sidebar_bg": "#121212",     # サイドバー背景 (Very Dark Gray)
-        "sidebar_text": "#f0f2f6",   # サイドバーテキスト (Light Gray)
-        "sidebar_link": "#BBDEFB",   # サイドバーリンク (Light Blue)
+        "bg_color": "#212121",
+        "text_color": "#f0f2f6",
+        "h_color": "#ffffff",
+        "primary_btn_bg": "#424242",
+        "primary_btn_hover": "#616161",
+        "sidebar_bg": "#121212",
+        "sidebar_text": "#f0f2f6",
+        "sidebar_link": "#BBDEFB",
     },
     "ミニマル・グリーン": {
-        "bg_color": "#E8F5E9",       # 薄緑
-        "text_color": "#388E3C",     # 濃い緑
-        "h_color": "#1B5E20",        # さらに濃い緑
-        "primary_btn_bg": "#4CAF50", # 緑
-        "primary_btn_hover": "#81C784", # 明るい緑
-        "sidebar_bg": "#A5D6A7",     # サイドバー薄い緑
+        "bg_color": "#E8F5E9",
+        "text_color": "#388E3C",
+        "h_color": "#1B5E20",
+        "primary_btn_bg": "#4CAF50",
+        "primary_btn_hover": "#81C784",
+        "sidebar_bg": "#A5D6A7",
         "sidebar_text": "#388E3C",
         "sidebar_link": "#1B5E20",
     }
 }
 
-# テーマCSSを生成する関数
 def get_theme_css(theme_name):
-    theme = THEMES.get(theme_name, THEMES["デフォルト (競プロアプリ)"]) # 存在しないテーマならデフォルト
-
+    theme = THEMES.get(theme_name, THEMES["デフォルト (競プロアプリ)"])
     return f"""
     <style>
     .stApp {{
@@ -98,7 +95,7 @@ def get_theme_css(theme_name):
         color: {theme['text_color']};
     }}
 
-    /* サイドバーメニューの色設定（順番に適用） - これはテーマ選択では変更されません */
+    /* サイドバーメニューの色設定（順番に適用） */
     section[data-testid="stSidebar"] label:nth-of-type(1) div span {{ color: #E74C3C !important; }}
     section[data-testid="stSidebar"] label:nth-of-type(2) div span {{ color: #2ECC71 !important; }}
     section[data-testid="stSidebar"] label:nth-of-type(3) div span {{ color: #F39C12 !important; }}
@@ -108,7 +105,7 @@ def get_theme_css(theme_name):
     /* Streamlitのデフォルトメニューとフッターを非表示 */
     #MainMenu {{visibility: hidden;}}
     footer {{visibility: hidden;}}
-    header {{visibility: hidden;}} /* 必要なら */
+    header {{visibility: hidden;}}
     </style>
     """
 
@@ -135,13 +132,13 @@ if 'current_page_name' not in st.session_state:
     else:
         st.session_state['current_page_name'] = "ログイン"
 
-st.markdown('<h1 style="color:#2ECC71;">競プロアプリへようこそ！</h1>', unsafe_allow_html=True) # アプリのメインタイトル
+st.markdown('<h1 style="color:#2ECC71;">競プロアプリへようこそ！</h1>', unsafe_allow_html=True)
 
 
 # サイドバーでページ選択
 st.sidebar.title("競プロアプリ")
 
-# ページ選択肢の定義（st.sidebar.radio の options と一致させる）
+# ページ選択肢の定義
 all_page_names = [
     "アカウント登録",
     "ログイン",
@@ -154,22 +151,23 @@ all_page_names = [
 try:
     default_index = all_page_names.index(st.session_state['current_page_name'])
 except ValueError:
-    default_index = 0 # フォールバック
+    default_index = 0
 
 selected_by_radio = st.sidebar.radio(
     "ページを選んでください",
     all_page_names,
-    index=default_index, # current_page_name に対応する位置を選択
-    key="sidebar_page_selector" # キーを追加
+    index=default_index,
+    key="sidebar_page_selector"
 )
 
 # ユーザーがサイドバーで選択を変更したら、セッションステートを更新
 if selected_by_radio != st.session_state['current_page_name']:
     st.session_state['current_page_name'] = selected_by_radio
-    st.rerun() # ページ切り替えをトリガー
+    st.rerun()
 
-# --- テーマ選択UIをサイドバーに追加 ---
-st.sidebar.markdown("---") # 区切り線
+
+# テーマ選択UIをサイドバーに追加
+st.sidebar.markdown("---")
 st.sidebar.subheader("テーマ")
 selected_theme = st.sidebar.selectbox(
     "テーマを選択",
@@ -183,19 +181,40 @@ if selected_theme != st.session_state['current_theme']:
     st.session_state['current_theme'] = selected_theme
     st.rerun()
 
-# ページの表示ロジック (st.session_state['current_page_name'] を使用)
+# --- ログアウトボタンの追加 ---
+st.sidebar.markdown("---") # 区切り線
+if st.session_state.get('login', False): # ログインしている場合のみ表示
+    st.sidebar.write(f"こんにちは、{st.session_state['username']}さん！")
+    if st.sidebar.button("ログアウト", key="logout_button"):
+        # セッションの状態をリセット
+        st.session_state['login'] = False
+        st.session_state['username'] = None
+        
+        # ユーザーデータが保持されている他のセッションステートもクリアすると安全
+        # 例:
+        if 'tasks' in st.session_state:
+            del st.session_state['tasks']
+        if 'records' in st.session_state: # もし training_log などで 'records' をセッションステートに保持している場合
+            del st.session_state['records']
+        if 'gemini_chat_messages' in st.session_state: # チャット履歴をクリア
+            del st.session_state['gemini_chat_messages']
+
+        # ログインページに遷移
+        st.session_state['current_page_name'] = "ログイン"
+        st.rerun()
+
+
+# ページの表示ロジック
 if st.session_state['current_page_name'] == "アカウント登録":
     from components import register
     register.render()
 elif st.session_state['current_page_name'] == "ログイン":
-    # ログイン済みでなければログインページを表示
     if not st.session_state['login']:
         from components import login
         login.render()
     else:
-        # ログイン済みにもかかわらずこのページに来たら、自動で「やることリスト」へ
         st.session_state['current_page_name'] = "やることリスト"
-        st.rerun() # 再実行してやることリストへ遷移
+        st.rerun()
 elif st.session_state['current_page_name'] == "やることリスト":
     from components import reservation
     reservation.render()

@@ -46,7 +46,7 @@ def render():
             st.markdown(f"<p style='text-align: right; font-size: 0.9em; color: gray;'>{char_count}/500字</p>", unsafe_allow_html=True)
 
             # ★コード入力欄の追加★
-            st.subheader("コードスニペット (オプション)")
+            st.subheader("コードを記入してください (オプション)")
             code_snippet = st.text_area(
                 "関連するコードをここに貼り付けてください",
                 height=300, # コードが見やすいように高さを確保
