@@ -20,7 +20,7 @@ THEMES = {
     "デフォルト": {
         "bg_color": "#FFF7F0",
         "text_color": "#2e2e2e",
-        "h_color": "#2e2e2e",
+        "h_color": "#543939",
         "primary_btn_bg": "#A7C7E7",
         "primary_btn_hover": "#FFD8A9",
         "sidebar_bg": "#F4A7B9",
