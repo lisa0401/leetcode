@@ -1,6 +1,22 @@
 import streamlit as st
 import pandas as pd
 import altair as alt # グラフ表示のために追加
+import os
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+load_dotenv()
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+model = genai.GenerativeModel("gemini-2.5-flash")
+CSV_PATH = "records.csv"
+
+def load_csv_data():
+    try:
+        df = pd.read_csv(CSV_PATH)
+        return df
+    except Exception as e:
+        st.error(f"CSV読み込みエラー: {e}")
+        return None
 
 def render():
     if st.session_state.get('login', False): # Use .get() for safer access
@@ -46,7 +62,7 @@ def render():
             st.markdown(f"<p style='text-align: right; font-size: 0.9em; color: gray;'>{char_count}/500字</p>", unsafe_allow_html=True)
 
             # ★コード入力欄の追加★
-            st.subheader("コードを記入してください (オプション)")
+            st.subheader("コードスニペット (オプション)")
             code_snippet = st.text_area(
                 "関連するコードをここに貼り付けてください",
                 height=300, # コードが見やすいように高さを確保
@@ -112,14 +128,31 @@ def render():
                    st.write(f"**解けたor解けなかった:** {record['解けたor解けなかった']}")
                    st.write(f"**反省点（感想）:**")
                    st.write(record['反省点（感想）']) # Markdownはそのまま反映されないのでst.write
-
+                   
                    if 'コードスニペット' in record and pd.notna(record['コードスニペット']) and record['コードスニペット'].strip():
                        st.write("**コードスニペット:**")
                        # コードブロックとして表示
                        st.code(record['コードスニペット'], language='python') # Pythonコードと仮定
 
+               if i == len(df) - 1:  # 最後の行だけに限定
+                    if st.button(f"AIにこのコードを評価してもらう（#{i+1}）"):
+                        n = record['実施した問題']
+                        m = record['コードスニペット']
+                        if not m.strip():
+                            st.warning("コードが入力されていません。")
+                        else:
+                            prompt = f"Leetcodeの問題「{n}」に対して、次のコードを評価してください。\n```python\n{m}\n```"
+                            with st.spinner("Geminiが評価中..."):
+                                try:
+                                    response = model.generate_content(prompt)
+                                    st.success("✅ Geminiの評価結果")
+                                    st.write(response.text)
+                                except Exception as e:
+                                    st.error(f"Gemini APIエラー: {e}")
+
         else:
            st.info("まだ記録がありません。")
+
 
         # --- グラフ表示と統計情報 ---
         st.header("分析ダッシュボード")
@@ -175,7 +208,6 @@ def render():
             else:
                 st.write("ベテラン学習者ですね！さらなる高みを目指しましょう。 (上級レベル)")
                 st.image("image/three.png")
-
         else:
             st.info("グラフや統計情報を表示するには、少なくとも1つの記録を追加してください。")
 
