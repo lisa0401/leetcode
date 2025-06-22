@@ -34,6 +34,6 @@ def render():
 
             # Geminiの返答を表示
             with st.chat_message("assistant"):
-                st.markdown(response.text)
+                 st.markdown(response.text)
     else:
         st.warning("ログインしてください。")
