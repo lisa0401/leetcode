@@ -1,26 +1,22 @@
-from PIL import Image
 import streamlit as st
-import pathlib # pathlib をインポート
+from PIL import Image
+import pathlib
+
 
 BASE_DIR = pathlib.Path(__file__).parent
 logo_path = BASE_DIR / "logo.png"
-# logo_path が存在するか確認し、存在しない場合はデフォルトのfaviconを使用
-try:
-    favicon = Image.open(logo_path)
-except FileNotFoundError:
-    favicon = None # または、ここにデフォルトのアイコンパスを設定
-
+logo_img = Image.open(logo_path)
 
 st.set_page_config(
     page_title="競プロアプリ",
-    page_icon=favicon,  # 画像をここで指定
+    page_icon=logo_img,
     layout="wide"
 )
 
 st.markdown("""
     <style>
     .stApp {
-        background-color: #FFF7F0;  /* Soft cream */
+        background-color: #FFF7F0;
         font-family: 'Poppins', sans-serif;
         color: #2e2e2e;
         padding: 0 2rem;
@@ -31,7 +27,7 @@ st.markdown("""
     }
 
     button[kind="primary"] {
-        background-color: #A7C7E7;  /* Soft blue */
+        background-color: #A7C7E7;
         color: white;
         border-radius: 10px;
         padding: 0.5rem 1rem;
@@ -40,7 +36,7 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] {
-        background-color: #F4A7B9;  /* Soft red-pink */
+        background-color: #F4A7B9;
         color: #2e2e2e;
     }
 
@@ -57,7 +53,7 @@ st.markdown("""
     }
 
     button[kind="primary"]:hover {
-        background-color: #FFD8A9;  /* Soft orange on hover */
+        background-color: #FFD8A9;
         color: #2e2e2e;
     }
 
@@ -81,73 +77,35 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# セッション状態の初期化
 if 'login' not in st.session_state:
     st.session_state['login'] = False
-if 'username' not in st.session_state:
-    st.session_state['username'] = None
 
-# ★★★ ここからが初期表示ページの決定とサイドバー制御の変更点 ★★★
 
-# ページ選択肢の定義（st.sidebar.radio の options と一致させる）
-all_page_names = [
+st.markdown('<h1 style="color:#2ECC71;">競プロアプリへようこそ！</h1>', unsafe_allow_html=True)
+
+
+st.sidebar.title("競プロアプリ")
+selected = st.sidebar.radio("ページを選んでください", [
     "アカウント登録",
     "ログイン",
     "やることリスト",
     "チャットで相談",
-    "実施した問題の記録",
-]
+    "実施した問題の記録"
+])
 
-# 'current_page_name' セッションステートの初期化と決定
-if 'current_page_name' not in st.session_state:
-    if st.session_state['login']:
-        st.session_state['current_page_name'] = "やることリスト"
-    else:
-        st.session_state['current_page_name'] = "ログイン"
 
-st.markdown('<h1 style="color:#2ECC71;">競プロアプリへようこそ！</h1>', unsafe_allow_html=True)
-
-# サイドバーでページ選択 (st.sidebar.radio の index を制御)
-st.sidebar.title("競プロアプリ")
-
-# current_page_name に基づいて index を決定
-try:
-    default_index = all_page_names.index(st.session_state['current_page_name'])
-except ValueError:
-    # 万が一 current_page_name が all_page_names にない場合のフォールバック
-    default_index = 0 # 「アカウント登録」をデフォルトに
-
-selected_by_radio = st.sidebar.radio(
-    "ページを選んでください",
-    all_page_names,
-    index=default_index, # current_page_name に対応する位置を選択
-    key="sidebar_page_selector" # キーを追加
-)
-
-# ユーザーがサイドバーで選択を変更したら、セッションステートを更新
-if selected_by_radio != st.session_state['current_page_name']:
-    st.session_state['current_page_name'] = selected_by_radio
-    st.rerun() # ページ切り替えをトリガー
-
-# ★★★ ページの表示ロジック (st.session_state['current_page_name'] を使用) ★★★
-if st.session_state['current_page_name'] == "アカウント登録":
+if selected == "アカウント登録":
     from components import register
     register.render()
-elif st.session_state['current_page_name'] == "ログイン":
-    # ログイン済みでなければログインページを表示
-    if not st.session_state['login']:
-        from components import login
-        login.render()
-    else:
-        # ログイン済みにもかかわらずこのページに来たら、自動で「やることリスト」へ
-        st.session_state['current_page_name'] = "やることリスト"
-        st.rerun() # 再実行してやることリストへ遷移
-elif st.session_state['current_page_name'] == "やることリスト":
+elif selected == "ログイン":
+    from components import login
+    login.render()
+elif selected == "やることリスト":
     from components import reservation
     reservation.render()
-elif st.session_state['current_page_name'] == "チャットで相談":
+elif selected == "チャットで相談":
     from components import chat
     chat.render()
-elif st.session_state['current_page_name'] == "実施した問題の記録":
+elif selected == "実施した問題の記録":
     from components import training_log
     training_log.render()

@@ -2,12 +2,13 @@ import streamlit as st
 from utils import auth
 
 def render():
-    st.title("ユーザー登録")
 
     auth.create_user_table()  # テーブルがなければ作成
 
     with st.form("register_form"):
-        st.subheader("アカウント情報を入力してください")
+        st.markdown('<h1 style="color:#E74C3C;">ユーザー登録</h1>', unsafe_allow_html=True)
+        st.markdown('<p style="color:#F39C12;">アカウント情報を入力してください</p>', unsafe_allow_html=True)
+
         username = st.text_input("ユーザー名")
         password = st.text_input("パスワード", type="password")
         password_confirm = st.text_input("パスワード（確認）", type="password")
