@@ -45,6 +45,22 @@ def create_user_table():
             code TEXT
         )
     """)
+
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            date TEXT,
+            description TEXT,
+            difficulty TEXT,
+            status TEXT,
+            reflection TEXT,
+            code TEXT,
+            title TEXT,
+            due TEXT,
+            done INTEGER
+        )
+    """)
     conn.commit()
     conn.close()
 
@@ -85,41 +101,41 @@ def get_all_users():
 def get_tasks(username):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("SELECT id, title, due, priority, done FROM tasks WHERE username = ?", (username,))
+    c.execute("SELECT id, title, due, difficulty, done FROM logs WHERE username = ?", (username,))
     rows = c.fetchall()
     conn.close()
-    tasks = []
+    logs = []
     for row in rows:
-        tasks.append({
+        logs.append({
             "id": row[0],
             "title": row[1],
             "due": row[2],
-            "priority": row[3],
+            "difficulty": row[3],
             "done": bool(row[4])
         })
-    return tasks
+    return logs
 
-def add_task(username, title, due, priority):
+def add_task(username, title, due, difficulty):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute(
-        "INSERT INTO tasks (username, title, due, priority, done) VALUES (?, ?, ?, ?, ?)",
-        (username, title, due, priority, 0)
+        "INSERT INTO s (username, title, due, difficulty, done) VALUES (?, ?, ?, ?, ?)",
+        (username, title, due, difficulty, 0)
     )
     conn.commit()
     conn.close()
 
-def update_task_done(task_id, done):
+def update_task_done(log_id, done):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("UPDATE tasks SET done = ? WHERE id = ?", (int(done), task_id))
+    c.execute("UPDATE logs SET done = ? WHERE id = ?", (int(done), log_id))
     conn.commit()
     conn.close()
 
-def delete_task(task_id):
+def delete_task(log_id):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+    c.execute("DELETE FROM logs WHERE id = ?", (log_id,))
     conn.commit()
     conn.close()
 
@@ -131,13 +147,13 @@ def get_records(username):
     c = conn.cursor()
     c.execute("""
         SELECT date, description, difficulty, status, reflection, code 
-        FROM records WHERE username=?
+        FROM logs WHERE username=?
     """, (username,))
     rows = c.fetchall()
     conn.close()
-    records = []
+    logs = []
     for row in rows:
-        records.append({
+        logs.append({
             'date': row[0],
             'description': row[1],
             'difficulty': row[2],
@@ -145,14 +161,14 @@ def get_records(username):
             'reflection': row[4],
             'code': row[5],
         })
-    return records
+    return logs
 
 
 def add_record(username, date, description, difficulty, status, reflection, code):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("""
-        INSERT INTO records (username, date, description, difficulty, status, reflection, code)
+        INSERT INTO logs (username, date, description, difficulty, status, reflection, code)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     """, (username, date, description, difficulty, status, reflection, code))
     conn.commit()

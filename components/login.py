@@ -2,7 +2,6 @@
 
 import streamlit as st
 from utils import auth
-import google.generativeai as genai # Gemini API用ライブラリ (お試しチャット用)
 
 def render():
 
