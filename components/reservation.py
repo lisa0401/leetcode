@@ -114,7 +114,7 @@ def render():
             new_task = st.text_input("新しいタスクを入力", key="task_input")
         with col2:
             due = st.date_input("締切", value=date.today())
-        difficulty = st.selectbox("優先度", ["高", "中", "低"], index=1)
+        difficulty = st.selectbox("難易度", ["Hard", "Medium", "Easy"], index=1)
         submitted = st.form_submit_button("追加")
 
         if submitted and new_task:
@@ -131,8 +131,8 @@ def render():
 
     st.write("## タスク一覧")
 
-    sort_method = st.selectbox("ソート方法を選択", options=["追加順", "優先度順", "日付順"])
-    difficulty_order = {"高": 0, "中": 1, "低": 2}
+    sort_method = st.selectbox("ソート方法を選択", options=["追加順", "難易度順", "日付順"])
+    difficulty_order = {"Easy": 0, "Medium": 1, "Hard": 2}
 
     def sort_tasks(tasks, method):
         processed_tasks = []
@@ -147,7 +147,7 @@ def render():
 
         if method == "追加順":
             return tasks
-        elif method == "優先度順":
+        elif method == "難易度順":
             return sorted(processed_tasks, key=lambda x: (difficulty_order.get(x["difficulty"], 99), x["due"]))
         elif method == "日付順":
             return sorted(processed_tasks, key=lambda x: (x["due"], difficulty_order.get(x["difficulty"], 99)))
@@ -176,7 +176,7 @@ def render():
             st.markdown(f"`{task['due']}`")
 
         with cols[3]:
-            color = {"高": "red", "中": "orange", "低": "green"}.get(task["difficulty"], "gray")
+            color = {"Hard": "red", "Medium": "orange", "Easy": "green"}.get(task["difficulty"], "gray")
             st.markdown(f"<span style='color:{color}'>{task['difficulty']}</span>", unsafe_allow_html=True)
 
         with cols[4]:
