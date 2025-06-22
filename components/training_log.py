@@ -12,7 +12,7 @@ load_dotenv()
 
 try:
     genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-    model = genai.GenerativeModel("gemini-pro")
+    model = genai.GenerativeModel("gemini-2.5-flash")
 except Exception as e:
     st.error(f"Gemini APIの初期設定に失敗しました。GOOGLE_API_KEYが正しく設定されているか確認してください。エラー: {e}")
     model = None
@@ -127,19 +127,11 @@ def render():
                 if 'コードスニペット' in record and pd.notna(record['コードスニペット']) and isinstance(record['コードスニペット'], str) and record['コードスニペット'].strip():
                     st.write("**コードスニペット:**")
                     st.code(record['コードスニペット'], language='python') # 以前のタイプミスは修正済み
-
-
-        # AI評価ボタンのロジック
-        if not df.empty and model:
-            last_record = df.iloc[0]
-            st.subheader("AIに最新のコードを評価してもらう")
-            if st.button(f"AIにこのコードを評価してもらう（{last_record['実施した問題']}）", key="ai_eval_button"):
-                n = last_record['実施した問題']
-                m = last_record['コードスニペット']
-                if not m or not m.strip():
-                    st.warning("最新の記録にコードが入力されていません。")
-                else:
-                    prompt = f"Leetcodeの問題「{n}」に対して、次のPythonコードを評価してください。\n```python\n{m}\n```"
+            
+            if model:
+                button_key = f"ai_eval_button_{i}"
+                if st.button(f"AIにこのコードを評価してもらう（{record['実施した問題']}）", key=button_key):
+                    prompt = f"Leetcodeの問題「{record['実施した問題']}」に対して、次のPythonコードを評価してください。\n```python\n{record['コードスニペット']}\n```"
                     with st.spinner("Geminiが評価中..."):
                         try:
                             response = model.generate_content(prompt)
@@ -148,8 +140,8 @@ def render():
                         except Exception as e:
                             st.error(f"Gemini APIエラー: {e}")
             
-        else:
-           st.info("まだ記録がありません。")
+            else:
+                st.info("まだ記録がありません。")
 
 
         # --- グラフ表示と統計情報 ---
