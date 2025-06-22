@@ -9,6 +9,8 @@ load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=api_key)
 
+model = genai.GenerativeModel("gemini-2.5-flash")
+
 def to_markdown(text):
   text = text.replace('•', '  *')
   return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
@@ -16,19 +18,22 @@ def to_markdown(text):
 
 def render():
     if st.session_state['login']:
+        if "chat" not in st.session_state:
+            st.session_state.chat = model.start_chat(history=[])
         st.title("チャットで相談")
         st.write("AIチャットで相談できます。")
         # ここにチャットインターフェースを実装
-        # モデルの初期化
-        model = genai.GenerativeModel("gemini-2.5-flash")
-        user_input = st.text_input("メッセージを入力してください:")
+        user_input = st.chat_input("メッセージを入力してください")
         if user_input:
-            with st.spinner("Geminiが考えています..."):
-                try:
-                    response = model.generate_content(user_input)
-                    st.success("Geminiの返答:")
-                    st.write(response.text)
-                except Exception as e:
-                    st.error(f"エラーが発生しました: {e}")
+            # ユーザーの入力を表示
+            with st.chat_message("user"):
+                st.markdown(user_input)
+
+            # Gemini APIで返答を生成
+            response = st.session_state.chat.send_message(user_input)
+
+            # Geminiの返答を表示
+            with st.chat_message("assistant"):
+                st.markdown(response.text)
     else:
         st.warning("ログインしてください。")
