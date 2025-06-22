@@ -13,9 +13,10 @@ def render():
     if username is None:
         st.warning("ユーザ情報が見つかりません。")
         return
+    st.markdown('<h1 style="color:#E74C3C;">やることリスト</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="color:#F39C12;font-size:18px;">やることリストをまとめることができます</h1>', unsafe_allow_html=True)
 
-    st.title("やることリスト")
-    st.write("やることリストをまとめることができます。")
+
 
     # --- 連続学習記録（問題記録ベース）と最長記録の表示 ---
     all_problem_records = auth.get_records(username) # すべての問題記録を取得
