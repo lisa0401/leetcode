@@ -10,14 +10,14 @@ except FileNotFoundError:
     favicon = None
 
 st.set_page_config(
-    page_title="競プロアプリ",
+    page_title="LeetCode記録サイト",
     page_icon=favicon,
     layout="wide"
 )
 
 # --- テーマの定義 (変更なし) ---
 THEMES = {
-    "デフォルト (競プロアプリ)": {
+    "デフォルト": {
         "bg_color": "#FFF7F0",
         "text_color": "#2e2e2e",
         "h_color": "#2e2e2e",
@@ -50,7 +50,7 @@ THEMES = {
 }
 
 def get_theme_css(theme_name):
-    theme = THEMES.get(theme_name, THEMES["デフォルト (競プロアプリ)"])
+    theme = THEMES.get(theme_name, THEMES["デフォルト"])
     return f"""
     <style>
     .stApp {{
@@ -111,7 +111,7 @@ def get_theme_css(theme_name):
 
 # セッション状態に現在のテーマを保存
 if 'current_theme' not in st.session_state:
-    st.session_state['current_theme'] = "デフォルト (競プロアプリ)"
+    st.session_state['current_theme'] = "デフォルト"
 
 # 選択されたテーマのCSSを適用
 st.markdown(get_theme_css(st.session_state['current_theme']), unsafe_allow_html=True)
@@ -132,11 +132,11 @@ if 'current_page_name' not in st.session_state:
     else:
         st.session_state['current_page_name'] = "ログイン"
 
-st.markdown('<h1 style="color:#2ECC71;">競プロアプリへようこそ！</h1>', unsafe_allow_html=True)
+st.markdown('<h1 style="color:#2ECC71;">LeetCode記録サイトへようこそ！</h1>', unsafe_allow_html=True)
 
 
 # サイドバーでページ選択
-st.sidebar.title("競プロアプリ")
+st.sidebar.title("LeetCode記録サイト")
 
 # ページ選択肢の定義
 all_page_names = [
